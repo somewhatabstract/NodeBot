@@ -10,8 +10,12 @@
 		<script src="js/main.js"></script>
 	</head>
 	<body>
-		<div id="main" ng-controller="botController">
+		<div tabindex="1" id="main" ng-controller="botController" ng-keydown="onKeydown($event)" ng-keyup="onKeyup($event)">
 			<div>
+				<div>
+					<button class='speed' ng-click='goSlow()'>SLOW</button>
+					<button class='speed' ng-click='goFast()'>FAST</button>
+				</div>
 				<div class="inline">
 					<button class='rotate' ng-click='rotate("counterclockwise")'>&lt;</button>
 				</div>
