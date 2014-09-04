@@ -1,0 +1,39 @@
+
+<!doctype html>
+<html>
+	<head>
+		<title>NodeBot - Sumo SuperBot</title>
+		<link rel="stylesheet" type="text/css" href="css/main.css"></link>
+		<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular-resource.min.js"></script>
+		<script src="js/main.js"></script>
+	</head>
+	<body>
+		<div id="main" ng-controller="botController">
+			<div>
+				<div class="inline">
+					<button class='rotate' ng-click='rotate("counterclockwise")'>&lt;</button>
+				</div>
+				<div class="inline">
+					<div>
+						<button ng-click='forward("left")'>LF</button>
+						<button ng-click='forward("both")'>F</button>
+						<button ng-click='forward("right")'>RF</button>
+					</div>
+					<div>
+						<button ng-click='back("left")'>LR</button>
+						<button ng-click='back("both")'>R</button>
+						<button ng-click='back("right")'>RR</button>
+					</div>
+				</div>
+				<div class="inline">
+					<button class='rotate' ng-click='rotate("clockwise")'>&gt;</button>
+				</div>
+			</div>
+			<div>
+				<button class="stop" ng-click='stop()'>STOP</button>
+			</div>
+		</div>
+	</body>
+</html>

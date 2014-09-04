@@ -1,0 +1,23 @@
+div {
+	margin:0;
+	padding:0;
+	vertical-align: top;
+}
+
+div.inline {
+	display: inline-block;
+}
+
+button {
+	height: 4em;
+	width: 5em;
+	margin: 0.25em;
+}
+
+button.rotate {
+	height: 8.45em;
+}
+
+button.stop {
+	width: 28.25em;
+}
