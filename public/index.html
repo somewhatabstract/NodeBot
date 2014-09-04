@@ -13,30 +13,30 @@
 		<div tabindex="1" id="main" ng-controller="botController" ng-keydown="onKeydown($event)" ng-keyup="onKeyup($event)">
 			<div>
 				<div>
-					<button class='speed' ng-click='goSlow()'>SLOW</button>
-					<button class='speed' ng-click='goFast()'>FAST</button>
+					<button ng-class="{highlight: isSlow}" class='speed' ng-click='goSlow()'>SLOW</button>
+					<button ng-class="{highlight: isFast}" class='speed' ng-click='goFast()'>FAST</button>
 				</div>
 				<div class="inline">
-					<button class='rotate' ng-click='rotate("counterclockwise")'>&lt;</button>
+					<button ng-class="{highlight: action=='<'}" class='rotate' ng-click='rotate("counterclockwise")'>&lt;</button>
 				</div>
 				<div class="inline">
 					<div>
-						<button ng-click='forward("left")'>LF</button>
-						<button ng-click='forward("both")'>F</button>
-						<button ng-click='forward("right")'>RF</button>
+						<button ng-class="{highlight: action=='LF'}" ng-click='forward("left")'>LF</button>
+						<button ng-class="{highlight: action=='F'}" ng-click='forward("both")'>F</button>
+						<button ng-class="{highlight: action=='RF'}" ng-click='forward("right")'>RF</button>
 					</div>
 					<div>
-						<button ng-click='back("left")'>LR</button>
-						<button ng-click='back("both")'>R</button>
-						<button ng-click='back("right")'>RR</button>
+						<button ng-class="{highlight: action=='LR'}" ng-click='back("left")'>LR</button>
+						<button ng-class="{highlight: action=='R'}" ng-click='back("both")'>R</button>
+						<button ng-class="{highlight: action=='RR'}" ng-click='back("right")'>RR</button>
 					</div>
 				</div>
 				<div class="inline">
-					<button class='rotate' ng-click='rotate("clockwise")'>&gt;</button>
+					<button ng-class="{highlight: action=='>'}" class='rotate' ng-click='rotate("clockwise")'>&gt;</button>
 				</div>
 			</div>
 			<div>
-				<button class="stop" ng-click='stop()'>STOP</button>
+				<button ng-class="{highlight: action=='STOP'}" class="stop" ng-click='stop()'>STOP</button>
 			</div>
 		</div>
 	</body>

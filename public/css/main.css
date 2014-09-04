@@ -25,3 +25,11 @@ button.stop {
 button.speed {
 	width: 13.7em;
 }
+
+button.highlight {
+	background-color: red;
+}
+
+button.highlight.speed {
+	background-color: green;
+}

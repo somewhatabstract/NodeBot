@@ -18,8 +18,9 @@ $(function(){
 		);
 	}]);
 
-	module.controller('botController', ['$rootScope', '$scope', 'nbApi', function($rootScope, $scope, nbApi){
+	module.controller('botController', ['$rootScope', '$scope', '$timeout', 'nbApi', function($rootScope, $scope, $timeout, nbApi){
 		$scope.status = "Not Initialized";
+		$scope.action = '';
 
 		var lastAction = angular.noop;
 
@@ -30,47 +31,86 @@ $(function(){
 
 		$scope.rotate = function(direction)	{
 			performAndSave( function() {
+				$scope.action = direction === 'clockwise' ? '>' : '<';
 				nbApi.rotate({direction: direction, rate: $scope.rate});
 			} );
 		};
 
 		$scope.stop = function() {
 			performAndSave( function() {
+				$scope.action = 'STOP';
 				nbApi.stop();
 			} );
 		};
 
 		$scope.forward = function(foot) {
 			performAndSave( function() {
+				switch (foot)
+				{
+				case 'left':
+					$scope.action = 'LF';
+					break;
+
+				case 'right':
+					$scope.action = 'RF';
+					break;
+
+				case 'both':
+					$scope.action = 'F';
+					break;
+				}
 				nbApi.forward({foot: foot, rate: $scope.rate});
 			} );
 		};
 
 		$scope.back = function(foot) {
 			performAndSave( function() {
+				switch (foot)
+				{
+				case 'left':
+					$scope.action = 'LR';
+					break;
+
+				case 'right':
+					$scope.action = 'RR';
+					break;
+
+				case 'both':
+					$scope.action = 'R';
+					break;
+				}
 				nbApi.back({foot: foot, rate: $scope.rate});
 			} );
 		};
 
 		$scope.goSlow = function() {
+			$scope.isFast = false;
+			$scope.isSlow = true;
 			$scope.rate = 0.05;
 			lastAction();
 		};
 
 		$scope.goFast = function() {
+			$scope.isSlow = false;
+			$scope.isFast = true;
 			$scope.rate = 1;
 			lastAction();
 		};
 		
 		$scope.onKeyup = function($event) {
+			console.log($event.keyCode);
 			switch ($event.keyCode)
 			{
 			case 38:
 			case 40:
+			case 17: //CTRL
 				break;
 			
 			default:
-				$scope.stop();
+				if (!$scope.sticky) {
+					$scope.stop();
+				}
+				$scope.sticky = false;
 				break;
 			}
 		};
@@ -79,41 +119,85 @@ $(function(){
 			switch ($event.keyCode)
 			{
 			case 87: //W
+			case 104://NUMPAD8
 				$scope.forward('both');
+				$scope.sticky = $event.ctrlKey;
+				$event.preventDefault();
 				break;
 
 			case 83: //S
+			case 98://NUMPAD2
 				$scope.back('both');
+				$scope.sticky = $event.ctrlKey;
+				$event.preventDefault();
 				break;
 
 			case 65: //A
-				if ($event.shiftKey) {
-					$scope.rotate('counterclockwise');
-				} else {
-					$scope.forward('right');
-				}
+			case 103://NUMPAD7
+				$scope.forward('right');
+				$scope.sticky = $event.ctrlKey;
+				$event.preventDefault();
 				break;
 
 			case 68: //D
-				if ($event.shiftKey) {
-					$scope.rotate('clockwise');
-				} else {
-					$scope.forward('left');
-				}
+			case 105://NUMPAD9
+				$scope.forward('left');
+				$scope.sticky = $event.ctrlKey;
+				$event.preventDefault();
+				break;
+
+			case 97://NUMPAD1
+				$scope.back('right');
+				$scope.sticky = $event.ctrlKey;
+				$event.preventDefault();
+				break;
+
+			case 99://NUMPAD3
+				$scope.back('left');
+				$scope.sticky = $event.ctrlKey;
+				$event.preventDefault();
 				break;
 
 			case 32: //SPACE
+			case 101: //NUMPAD5
 				$scope.stop();
+				$scope.sticky = $event.ctrlKey;
+				$event.preventDefault();
 				break;
 
 			case 40: //DOWN
 				$scope.goSlow();
+				$scope.sticky = $event.ctrlKey;
+				$event.preventDefault();
 				break;
 
 			case 38: //UP
 				$scope.goFast();
+				$scope.sticky = $event.ctrlKey;
+				$event.preventDefault();
+				break;
+
+			case 39: //RIGHT
+			case 102: //NUMPAD6
+				$scope.rotate('clockwise');
+				$scope.sticky = $event.ctrlKey;
+				$event.preventDefault();
+				break;
+
+			case 37: //LEFT
+			case 100: //NUMPAD4
+				$scope.rotate('counterclockwise');
+				$scope.sticky = $event.ctrlKey;
+				$event.preventDefault();
 				break;
 			}
 		};
+
+		$scope.stop();
+		$scope.goFast();
+
+		$timeout(function(){
+			$('#main').focus();
+		});
 	}]);
 });
