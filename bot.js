@@ -158,14 +158,14 @@ function initializeApi(drive,scanner,led) {
 	app.post('/move', function (req, res){
 		var direction = req.param('direction');
 		drive[req.param('direction')](req.param('foot'), req.param('rate'));
-		setStatus(true,req.param('scan') === 'ON',scanner,led);
+		setStatus(true, false,scanner,led);
 		res.send();
 	});
 
 	app.post('/rotate', function (req, res){
 		var direction = req.param('direction');
 		drive.rotate(direction, req.param('rate'));
-		setStatus(true,req.param('scan') === 'ON',scanner,led);
+		setStatus(true,false,scanner,led);
 		res.send();
 	});
 
