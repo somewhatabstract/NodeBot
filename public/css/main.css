@@ -4,6 +4,12 @@ div {
 	vertical-align: top;
 }
 
+h1 {
+	font-family: Arial;
+	padding:0;
+	margin-bottom: 0.25em;
+}
+
 div.inline {
 	display: inline-block;
 }
@@ -26,10 +32,19 @@ button.speed {
 	width: 13.7em;
 }
 
+button.scan {
+	vertical-align: top;
+	width: 8.9em;
+}
+
 button.highlight {
 	background-color: red;
 }
 
 button.highlight.speed {
 	background-color: green;
+}
+
+button.highlight.scan {
+	background-color: yellow;
 }

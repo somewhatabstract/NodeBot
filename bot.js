@@ -6,17 +6,43 @@ var root = __dirname,
 
 board.on("ready", function() {
 	var led = createRgb();
-	led.color("#0000FF");
-	led.blink();
-
 	var drive = createDrive();
-	initializeApi(drive);
+	var scanner = createScanner();
+	initializeApi(drive, scanner, led);
 
-	board.repl.inject({drive:drive,led:led});
+	setStatus(false, false,scanner,led);
+
+	board.repl.inject({drive:drive,led:led,scanner:scanner});
 });
 
-function createRgb()
-{
+function setStatus(moving, scanning,scanner, led) {
+
+	if (moving) {
+		led.stop();
+		led.on();
+		led.color("#00FFFF");
+	} else {
+		led.on();
+		led.color("#0000FF");
+		led.blink();
+
+		if (!scanning) {
+			setTimeout(function(){
+				led.stop();
+				led.on();
+			}, 10000);
+		}
+	}
+
+	if (scanning) {
+		scanner.sweep();
+	} else {
+		scanner.stop();
+		scanner.center();
+	}
+}
+
+function createRgb() {
 	var led = new five.Led.RGB({
 		pins: {
 			red: 9,
@@ -29,10 +55,19 @@ function createRgb()
 	return led;
 }
 
+function createScanner() {
+	var servo = new five.Servo({
+		pin: 6,
+		specs: { speed: five.Servo.Continuous.speeds["@5.0V"] }
+	});
+	servo.center();
+	return servo;
+}
+
 function createDrive() {
 	var drive = {
-		left: createServo(3, false),
-		right: createServo(5, true),
+		left: createDriveServo(3, false),
+		right: createDriveServo(5, true),
 		forward: function (foot, rate) {
 			switch (foot)
 			{
@@ -94,7 +129,7 @@ function createDrive() {
 	return drive;
 }
 
-function createServo(pin, invert) {
+function createDriveServo(pin, invert) {
 	var topSpeed = 90;
 	var servo = new five.Servo({
 		pin: pin,
@@ -117,23 +152,26 @@ function createServo(pin, invert) {
 	return servo;
 }
 
-function initializeApi(drive) {
+function initializeApi(drive,scanner,led) {
 	var app = express();
 
 	app.post('/move', function (req, res){
 		var direction = req.param('direction');
 		drive[req.param('direction')](req.param('foot'), req.param('rate'));
+		setStatus(true,req.param('scan') === 'ON',scanner,led);
 		res.send();
 	});
 
 	app.post('/rotate', function (req, res){
 		var direction = req.param('direction');
 		drive.rotate(direction, req.param('rate'));
+		setStatus(true,req.param('scan') === 'ON',scanner,led);
 		res.send();
 	});
 
 	app.post('/stop', function (req, res) {
 		drive.stop();
+		setStatus(false,req.param('scan') !== 'OFF',scanner,led);
 		res.send();
 	});
 

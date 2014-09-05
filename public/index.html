@@ -38,6 +38,14 @@
 			<div>
 				<button ng-class="{highlight: action=='STOP'}" class="stop" ng-click='stop()'>STOP</button>
 			</div>
+			<div>
+				<h1>Scanner</h1>
+				<div>
+					<button ng-class="{highlight: scan=='OFF'}" class="scan" ng-click='setScanner("OFF")'>OFF</button>
+					<button ng-class="{highlight: scan=='WHENSTOPPED'}" class="scan" ng-click='setScanner("WHENSTOPPED")'>WHEN STOPPED</button>
+					<button ng-class="{highlight: scan=='ON'}" class="scan" ng-click='setScanner("ON")'>ON</button>
+				</div>
+			</div>
 		</div>
 	</body>
 </html>

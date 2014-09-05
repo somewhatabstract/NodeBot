@@ -8,7 +8,7 @@ $(function(){
 	module.factory('nbApi', ['$resource', function ($resource){
 		return $resource(
 			'/:action',
-			{ direction: '@direction', foot: '@foot', rate: '@rate' },
+			{ direction: '@direction', foot: '@foot', rate: '@rate', scan: '@scan' },
 			{
 				rotate: {method:'POST', params: {action: 'rotate', hacker: 'notahacker'}},
 				stop: {method:'POST', params: {action: 'stop', hacker: 'notahacker'}},
@@ -21,6 +21,7 @@ $(function(){
 	module.controller('botController', ['$rootScope', '$scope', '$timeout', 'nbApi', function($rootScope, $scope, $timeout, nbApi){
 		$scope.status = "Not Initialized";
 		$scope.action = '';
+		$scope.scan = 'OFF';
 
 		var lastAction = angular.noop;
 
@@ -32,14 +33,14 @@ $(function(){
 		$scope.rotate = function(direction)	{
 			performAndSave( function() {
 				$scope.action = direction === 'clockwise' ? '>' : '<';
-				nbApi.rotate({direction: direction, rate: $scope.rate});
+				nbApi.rotate({direction: direction, rate: $scope.rate, scan: $scope.scan});
 			} );
 		};
 
 		$scope.stop = function() {
 			performAndSave( function() {
 				$scope.action = 'STOP';
-				nbApi.stop();
+				nbApi.stop({scan: $scope.scan});
 			} );
 		};
 
@@ -59,7 +60,7 @@ $(function(){
 					$scope.action = 'F';
 					break;
 				}
-				nbApi.forward({foot: foot, rate: $scope.rate});
+				nbApi.forward({foot: foot, rate: $scope.rate, scan: $scope.scan});
 			} );
 		};
 
@@ -79,8 +80,13 @@ $(function(){
 					$scope.action = 'R';
 					break;
 				}
-				nbApi.back({foot: foot, rate: $scope.rate});
+				nbApi.back({foot: foot, rate: $scope.rate, scan: $scope.scan});
 			} );
+		};
+
+		$scope.setScanner = function(setting) {
+			$scope.scan = setting;
+			lastAction();
 		};
 
 		$scope.goSlow = function() {
