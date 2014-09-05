@@ -5,15 +5,34 @@ var root = __dirname,
     board = new five.Board();
 
 board.on("ready", function() {
+	var led = createRgb();
+	led.color("#0000FF");
+	led.blink();
+
 	var drive = createDrive();
-	board.repl.inject({drive:drive});
 	initializeApi(drive);
+
+	board.repl.inject({drive:drive,led:led});
 });
+
+function createRgb()
+{
+	var led = new five.Led.RGB({
+		pins: {
+			red: 9,
+			green: 11,
+			blue: 10
+		} });
+
+	led.on(); // Really means off
+
+	return led;
+}
 
 function createDrive() {
 	var drive = {
-		left: createServo(3,false),
-		right: createServo(10,true),
+		left: createServo(3, false),
+		right: createServo(5, true),
 		forward: function (foot, rate) {
 			switch (foot)
 			{
